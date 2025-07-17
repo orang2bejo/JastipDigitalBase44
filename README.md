@@ -1,16 +1,17 @@
-<<<<<<< HEAD
-# Base44 App
+# JastipDigitalBase44
 
+_Originally scaffolded by Base44 using Vite + React. Customized for JastipDigital._
 
-This app was created automatically by Base44.
-It's a Vite+React app that communicates with the Base44 API.
+JastipDigitalBase44 adalah fondasi untuk aplikasi jastip digital modular yang berkomunikasi dengan API Base44 dan memiliki fitur opsional seperti pelacakan GPS, penyesuaian harga berbasis cuaca, serta struktur audit untuk kepatuhan PSE.
 
-## Running the app
+---
+
+## 🚀 Menjalankan Aplikasi
 
 ```bash
 npm install
 npm run dev
-```
+
 
 ## Building the app
 
