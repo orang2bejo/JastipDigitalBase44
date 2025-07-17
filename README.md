@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Base44 App
 
 
@@ -18,3 +19,6 @@ npm run build
 ```
 
 For more information and support, please contact Base44 support at app@base44.com.
+=======
+# JastipDigitalBase44
+>>>>>>> e5073baa29b60d64909a9346f74cdb14ba6bd786
