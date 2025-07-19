@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from "react";
-import { Order } from "@/api/entities";
-import { Driver } from "@/api/entities";
-import { Link } from "react-router-dom";
+import { Order, User } from "@/api/entities";
+import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { 
   Plus, 
@@ -13,7 +11,10 @@ import {
   Star,
   ArrowRight,
   Package,
-  MessageCircle
+  MessageCircle,
+  Settings,
+  Award,
+  Wallet
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,23 +32,38 @@ const statusConfig = {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [activeOrders, setActiveOrders] = useState([]);
+  const [userProfile, setUserProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadOrders();
+    loadData();
   }, []);
 
-  const loadOrders = async () => {
+  const loadData = async () => {
     try {
-      const allOrders = await Order.list("-created_date", 10);
-      setOrders(allOrders);
-      setActiveOrders(allOrders.filter(order => 
+      // Check if user is authenticated
+      const user = await User.me();
+      if (!user) {
+        navigate(createPageUrl("LandingPage"));
+        return;
+      }
+
+      setUserProfile(user);
+
+      // Load user orders
+      const userOrders = await Order.getUserOrders(user.id);
+      setOrders(userOrders);
+      setActiveOrders(userOrders.filter(order => 
         ['pending', 'accepted', 'shopping', 'delivering', 'price_confirmation', 'waiting_payment'].includes(order.status)
       ));
     } catch (error) {
-      console.error("Error loading orders:", error);
+      console.error("Error loading dashboard data:", error);
+      if (error.message.includes('Auth')) {
+        navigate(createPageUrl("LandingPage"));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -67,8 +83,8 @@ export default function Dashboard() {
     return (
       <div className="p-8 animate-pulse">
         <div className="h-8 bg-gray-200 rounded w-1/3 mb-8"></div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {[1, 2, 3].map(i => (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          {[1, 2, 3, 4].map(i => (
             <div key={i} className="h-32 bg-gray-200 rounded-2xl"></div>
           ))}
         </div>
@@ -79,17 +95,33 @@ export default function Dashboard() {
   return (
     <div className="p-6 lg:p-8 space-y-8">
       {/* Welcome Header */}
-      <div className="text-center lg:text-left">
-        <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-          Selamat Datang di JastipDigital! 👋
-        </h1>
-        <p className="text-gray-600 text-lg">
-          Platform jasa titip beli digital - Titipkan, kami antar!
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+            Selamat Datang, {userProfile?.profile?.full_name || userProfile?.email}! 👋
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Platform jasa titip beli digital terlengkap - Titipkan, kami antar!
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Link to={createPageUrl("UserProfile")}>
+            <Button variant="outline" size="sm">
+              <Settings className="w-4 h-4 mr-2" />
+              Profile
+            </Button>
+          </Link>
+          <Link to={createPageUrl("Wallet")}>
+            <Button variant="outline" size="sm">
+              <Wallet className="w-4 h-4 mr-2" />
+              Wallet
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white border-0 shadow-xl shadow-blue-500/20">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -131,33 +163,74 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Quick Action */}
-      <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-600 to-green-600 text-white overflow-hidden">
-        <CardContent className="p-8">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="text-center lg:text-left">
-              <h3 className="text-2xl font-bold mb-2">Butuh Belanjain Sesuatu?</h3>
-              <p className="text-indigo-100 text-lg">
-                Dari makanan, obat, hingga barang elektronik - semuanya bisa dititipkan
-              </p>
-              {/* Alert for payment method */}
-              <div className="mt-4 p-3 bg-white/20 rounded-lg">
-                <p className="text-sm text-white">
-                  💡 <strong>Info:</strong> Gunakan pembayaran cash untuk pengalaman terbaik. Pembayaran digital masih dalam tahap trial.
-                </p>
+        <Card className="bg-gradient-to-br from-orange-500 to-orange-600 text-white border-0 shadow-xl shadow-orange-500/20">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-orange-100 text-sm font-medium">Status Member</p>
+                <p className="text-2xl font-bold mt-1">Gold</p>
+              </div>
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <Award className="w-6 h-6" />
               </div>
             </div>
-            <Link to={createPageUrl("CreateOrder")}>
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-50 font-semibold px-8 py-4 rounded-xl shadow-lg">
-                <Plus className="w-5 h-5 mr-2" />
-                Pesan Sekarang
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Action Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Regular Order */}
+        <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-600 to-green-600 text-white overflow-hidden">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold mb-2">Butuh Belanjain Sesuatu?</h3>
+                <p className="text-indigo-100 text-lg">
+                  Dari makanan, obat, hingga barang elektronik
+                </p>
+                <div className="mt-4 p-3 bg-white/20 rounded-lg">
+                  <p className="text-sm text-white">
+                    💡 Sistem pembayaran terintegrasi dengan berbagai metode
+                  </p>
+                </div>
+              </div>
+              <Link to={createPageUrl("CreateOrder")}>
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-50 font-semibold px-8 py-4 rounded-xl shadow-lg">
+                  <Plus className="w-5 h-5 mr-2" />
+                  Pesan Sekarang
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Specialist Service */}
+        <Card className="border-0 shadow-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white overflow-hidden">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-2xl font-bold mb-2">Butuh Layanan Spesialis?</h3>
+                <p className="text-purple-100 text-lg">
+                  Service elektronik, reparasi, konsultasi ahli
+                </p>
+                <div className="mt-4 p-3 bg-white/20 rounded-lg">
+                  <p className="text-sm text-white">
+                    ⭐ Mitra berpengalaman dan terverifikasi
+                  </p>
+                </div>
+              </div>
+              <Link to={createPageUrl("SpecialistService")}>
+                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-50 font-semibold px-8 py-4 rounded-xl shadow-lg">
+                  <Award className="w-5 h-5 mr-2" />
+                  Cari Spesialis
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Active Orders */}
       {activeOrders.length > 0 && (
