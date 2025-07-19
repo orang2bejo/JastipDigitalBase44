@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { User } from "@/api/entities";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +22,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function LandingPage() {
   const navigate = useNavigate();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const [authError, setAuthError] = useState(null); // Added authError state
+  const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
     checkUserAuth();
@@ -33,30 +32,26 @@ export default function LandingPage() {
     try {
       const user = await User.me();
       if (user) {
-        // User sudah login, langsung redirect ke Dashboard
         console.log('User already logged in, redirecting to Dashboard');
         navigate(createPageUrl("Dashboard"), { replace: true });
         return;
       }
     } catch (error) {
-      // User belum login atau error, tampilkan landing page
       console.log('User not logged in or error occurred:', error);
-      setAuthError(null); // Reset error because this is normal behavior for unauthenticated users
+      setAuthError(null);
     } finally {
       setIsCheckingAuth(false);
     }
   };
 
   const handleLogin = async () => {
-    setAuthError(null); // Clear previous errors
+    setAuthError(null);
     try {
-      // Try to log in with redirect to Dashboard
       await User.loginWithRedirect(window.location.origin + createPageUrl("Dashboard"));
     } catch (error) {
       console.error("Login error:", error);
       setAuthError("Gagal melakukan login. Silakan coba lagi.");
       
-      // Fallback: try regular login if redirect fails (e.g., due to unsupported browser feature or specific error)
       try {
         await User.login();
       } catch (fallbackError) {
@@ -66,7 +61,6 @@ export default function LandingPage() {
     }
   };
 
-  // Tampilkan loading sementara mengecek auth status
   if (isCheckingAuth) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
@@ -85,19 +79,14 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/f58518512_jastip.png" 
-                alt="JastipDigital Logo" 
-                className="h-10 w-auto"
-                width={40}
-                height={40}
-              />
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <ShoppingCart className="w-6 h-6 text-white" />
+              </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">JastipDigital</h1>
                 <p className="text-xs text-gray-600">Platform Jasa Titip Digital</p>
               </div>
             </div>
-            {/* Added a div to contain Button and authError message */}
             <div className="flex flex-col items-end">
               <Button onClick={handleLogin} className="bg-blue-600 hover:bg-blue-700">
                 Masuk / Daftar
@@ -147,12 +136,10 @@ export default function LandingPage() {
           {/* Payment Notice */}
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 max-w-2xl mx-auto">
             <p className="text-amber-800 text-sm">
-              💡 <strong>Info Pembayaran:</strong> Untuk pengalaman terbaik, gunakan pembayaran cash. 
-              Pembayaran digital masih dalam tahap trial dan mungkin mengalami kendala.
+              💡 <strong>Info Pembayaran:</strong> Sistem pembayaran terintegrasi dengan berbagai metode pembayaran digital untuk kemudahan transaksi.
             </p>
           </div>
 
-          {/* Display authError in Hero section if present */}
           {authError && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8 max-w-2xl mx-auto">
               <p className="text-red-800 text-sm">
@@ -205,9 +192,9 @@ export default function LandingPage() {
                 <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-purple-600" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Komunitas Aktif</h3>
+                <h3 className="text-xl font-semibold mb-3">Layanan Spesialis</h3>
                 <p className="text-gray-600">
-                  Ribuan driver aktif siap membantu kebutuhan belanja Anda kapan saja
+                  Mitra spesialis untuk kebutuhan khusus dan layanan premium berkualitas tinggi
                 </p>
               </CardContent>
             </Card>
@@ -300,13 +287,9 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/f58518512_jastip.png" 
-                  alt="JastipDigital Logo" 
-                  className="h-8 w-auto"
-                  width={32}
-                  height={32}
-                />
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <ShoppingCart className="w-5 h-5 text-white" />
+                </div>
                 <span className="text-lg font-bold">JastipDigital</span>
               </div>
               <p className="text-gray-400 text-sm">
