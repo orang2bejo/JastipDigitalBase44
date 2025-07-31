@@ -422,3 +422,263 @@ export const IndonesiaRegion = {
     return [...new Set(data.map(item => item.regency))]
   }
 }
+
+// Donation Management
+export const Donation = {
+  async list(limit = 20) {
+    const { data, error } = await supabase
+      .from('donation')
+      .select(`
+        *,
+        donor:User!donor_id(id, full_name),
+        winner:User!winner_id(id, full_name)
+      `)
+      .limit(limit)
+      .order('created_date', { ascending: false })
+    
+    if (error) throw error
+    return data
+  },
+
+  async create(donationData) {
+    const { data, error } = await supabase
+      .from('donation')
+      .insert(donationData)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async update(id, updates) {
+    const { data, error } = await supabase
+      .from('donation')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  }
+}
+
+// Pricing Rules
+export const PricingRule = {
+  async list() {
+    const { data, error } = await supabase
+      .from('pricing_rule')
+      .select('*')
+      .order('priority', { ascending: true })
+    
+    if (error) throw error
+    return data
+  },
+
+  async getActiveRules() {
+    const { data, error } = await supabase
+      .from('pricing_rule')
+      .select('*')
+      .eq('is_active', true)
+      .order('priority', { ascending: true })
+    
+    if (error) throw error
+    return data
+  }
+}
+
+// Support Tickets
+export const SupportTicket = {
+  async list(limit = 50) {
+    const { data, error } = await supabase
+      .from('support_ticket')
+      .select(`
+        *,
+        User:user_id(id, full_name, email)
+      `)
+      .limit(limit)
+      .order('created_date', { ascending: false })
+    
+    if (error) throw error
+    return data
+  },
+
+  async create(ticketData) {
+    const { data, error } = await supabase
+      .from('support_ticket')
+      .insert(ticketData)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async update(id, updates) {
+    const { data, error } = await supabase
+      .from('support_ticket')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  }
+}
+
+// Delivery Zones
+export const DeliveryZone = {
+  async list() {
+    const { data, error } = await supabase
+      .from('delivery_zone')
+      .select('*')
+      .order('zone_name')
+    
+    if (error) throw error
+    return data
+  },
+
+  async create(zoneData) {
+    const { data, error } = await supabase
+      .from('delivery_zone')
+      .insert(zoneData)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async checkCoverage(latitude, longitude) {
+    const { data, error } = await supabase.rpc('check_delivery_coverage', {
+      lat: latitude,
+      lng: longitude
+    })
+    
+    if (error) throw error
+    return data
+  }
+}
+
+// Company Profile
+export const CompanyProfile = {
+  async list() {
+    const { data, error } = await supabase
+      .from('company_profile')
+      .select('*')
+    
+    if (error) throw error
+    return data
+  },
+
+  async get(id) {
+    const { data, error } = await supabase
+      .from('company_profile')
+      .select('*')
+      .eq('id', id)
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async update(id, updates) {
+    const { data, error } = await supabase
+      .from('company_profile')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  }
+}
+
+// Driver Wallet
+export const DriverWallet = {
+  async filter(filters) {
+    let query = supabase
+      .from('driver_wallet')
+      .select('*')
+    
+    if (filters.owner_id) {
+      query = query.eq('owner_id', filters.owner_id)
+    }
+    
+    const { data, error } = await query
+    if (error) throw error
+    return data
+  },
+
+  async get(id) {
+    const { data, error } = await supabase
+      .from('driver_wallet')
+      .select('*')
+      .eq('id', id)
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async updateBalance(id, amount, operation = 'add') {
+    const { data, error } = await supabase.rpc('update_wallet_balance', {
+      wallet_id: id,
+      amount: amount,
+      operation: operation
+    })
+    
+    if (error) throw error
+    return data
+  }
+}
+
+// Withdrawal Requests
+export const WithdrawalRequest = {
+  async create(requestData) {
+    const { data, error } = await supabase
+      .from('withdrawal_request')
+      .insert(requestData)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  },
+
+  async list(filters = {}) {
+    let query = supabase
+      .from('withdrawal_request')
+      .select(`
+        *,
+        driver:driver_id(id, full_name, phone_number)
+      `)
+    
+    if (filters.driver_id) {
+      query = query.eq('driver_id', filters.driver_id)
+    }
+    
+    if (filters.status) {
+      query = query.eq('status', filters.status)
+    }
+    
+    const { data, error } = await query.order('created_date', { ascending: false })
+    if (error) throw error
+    return data
+  },
+
+  async update(id, updates) {
+    const { data, error } = await supabase
+      .from('withdrawal_request')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  }
+}
