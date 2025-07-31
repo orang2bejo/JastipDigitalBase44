@@ -6,7 +6,9 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    allowedHosts: true
+    allowedHosts: true,
+    host: '0.0.0.0',
+    port: 5173
   },
   resolve: {
     alias: {
@@ -20,5 +22,9 @@ export default defineConfig({
         '.js': 'jsx',
       },
     },
+  },
+  define: {
+    'process.env': {},
+    global: 'globalThis',
   },
 }) 
