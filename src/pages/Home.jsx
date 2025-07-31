@@ -37,28 +37,31 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-xl border-b border-blue-100 sticky top-0 z-50">
+      <header className="bg-white/80 backdrop-blur-xl border-b border-blue-100 sticky top-0 z-50 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center gap-3">
               <img 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/f58518512_jastip.png" 
                 alt="JastipDigital Logo" 
-                className="h-10 w-auto"
+                className="h-10 w-auto drop-shadow-lg"
                 width={40}
                 height={40}
               />
-              <h1 className="text-2xl font-bold text-gray-900">JastipDigital</h1>
+              <h1 className="text-2xl font-bold text-gray-900 tracking-tight">JastipDigital</h1>
             </div>
             <div className="flex items-center gap-4">
-              <Link to={createPageUrl("LandingPage")} className="text-gray-600 hover:text-blue-600">
+              <Link to={createPageUrl("LandingPage")}
+                className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
                 Fitur
               </Link>
-              <Link to={createPageUrl("UserGuide")} className="text-gray-600 hover:text-blue-600">
+              <Link to={createPageUrl("UserGuide")}
+                className="text-gray-600 hover:text-blue-600 font-medium transition-colors">
                 Cara Kerja
               </Link>
-              <Link to={createPageUrl("Dashboard")}>
-                <Button className="bg-blue-600 hover:bg-blue-700">Masuk</Button>
+              <Link to={createPageUrl("Dashboard")}
+                className="">
+                <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg transition-transform hover:scale-105">Masuk</Button>
               </Link>
             </div>
           </div>
@@ -70,7 +73,7 @@ export default function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            <h2 className="text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight">
+            <h2 className="text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight tracking-tight">
               Titip Apa Aja, <span className="text-blue-600">Beres Seketika.</span>
             </h2>
             <p className="mt-6 text-xl text-gray-600 leading-relaxed">
@@ -78,14 +81,16 @@ export default function HomePage() {
               Dari makanan, belanjaan, hingga layanan darurat, semua ada.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Link to={createPageUrl("Dashboard")}>
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto">
+              <Link to={createPageUrl("Dashboard")}
+                className="w-full sm:w-auto">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto font-semibold shadow-lg transition-transform hover:scale-105">
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   Pesan Sekarang
                 </Button>
               </Link>
-              <Link to={createPageUrl("Dashboard")}>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
+              <Link to={createPageUrl("Dashboard")}
+                className="w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto font-semibold border-blue-600 text-blue-600 hover:bg-blue-50 transition-transform hover:scale-105">
                   <TruckIcon className="w-5 h-5 mr-2" />
                   Jadi Driver
                 </Button>
@@ -160,25 +165,25 @@ export default function HomePage() {
       <section className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900">Kenapa Pilih JastipDigital?</h3>
+            <h3 className="text-3xl font-bold text-gray-900 tracking-tight">Kenapa Pilih JastipDigital?</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-blue-50">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <TruckIcon className="w-8 h-8 text-blue-600" />
               </div>
               <h4 className="text-xl font-semibold mb-2">Driver Terpercaya</h4>
               <p className="text-gray-600">Semua driver telah terverifikasi dengan sistem keamanan berlapis</p>
             </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-green-50">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <MapPin className="w-8 h-8 text-green-600" />
               </div>
               <h4 className="text-xl font-semibold mb-2">Jangkauan Luas</h4>
               <p className="text-gray-600">Melayani berbagai kota dengan area coverage yang terus berkembang</p>
             </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 bg-purple-50">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <Wrench className="w-8 h-8 text-purple-600" />
               </div>
               <h4 className="text-xl font-semibold mb-2">Layanan Spesialis</h4>
@@ -192,7 +197,7 @@ export default function HomePage() {
       <section className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 tracking-tight">
               Paket Layanan & Harga
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -203,7 +208,7 @@ export default function HomePage() {
           {/* Service Packages */}
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Jasa Titip Beli */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100 hover:shadow-2xl transition-all duration-300">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <ShoppingCart className="w-8 h-8 text-white" />
@@ -211,7 +216,6 @@ export default function HomePage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Jasa Titip Beli</h3>
                 <p className="text-gray-600">Belanjakan apa saja untuk Anda</p>
               </div>
-              
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-700">Biaya Layanan</span>
@@ -230,29 +234,25 @@ export default function HomePage() {
                   <span className="font-bold text-green-600 text-lg">Rp 65.500</span>
                 </div>
               </div>
-              
               <div className="text-center">
                 <button 
                   onClick={handleGetStarted}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg transition-transform hover:scale-105"
                 >
                   Pesan Sekarang
                 </button>
               </div>
-              
               <p className="text-xs text-gray-500 mt-4 text-center">
                 *Contoh: Barang Rp 50.000 + Ongkir Rp 10.000 + Biaya Layanan Rp 5.500
               </p>
             </div>
-
             {/* Mitra Spesialis */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-purple-100 hover:shadow-2xl transition-all duration-300 transform scale-105 relative">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-purple-100 hover:shadow-2xl transition-all duration-300 transform scale-105 relative hover:-translate-y-1">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                <span className="bg-purple-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
                   POPULER
                 </span>
               </div>
-              
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Wrench className="w-8 h-8 text-white" />
@@ -260,7 +260,6 @@ export default function HomePage() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Mitra Spesialis</h3>
                 <p className="text-gray-600">Layanan ahli ke rumah Anda</p>
               </div>
-              
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-700">Fee Platform</span>
@@ -279,61 +278,55 @@ export default function HomePage() {
                   <span className="font-bold text-green-600 text-lg">Rp 200.000+</span>
                 </div>
               </div>
-              
               <div className="text-center">
                 <button 
                   onClick={handleRegisterMitra}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg transition-transform hover:scale-105"
                 >
                   Daftar Mitra
                 </button>
               </div>
-              
               <p className="text-xs text-gray-500 mt-4 text-center">
                 Mitra mendapat 94% dari harga yang disepakati
               </p>
             </div>
-
             {/* Driver Partner */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 border border-green-100 hover:shadow-2xl transition-all duration-300">
+            <div className="bg-white rounded-2xl shadow-xl p-8 border border-green-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
               <div className="text-center mb-6">
                 <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <TruckIcon className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Driver Partner</h3>
-                <p className="text-gray-600">Jadi mitra driver kami</p>
+                <p className="text-gray-600">Gabung sebagai driver dan dapatkan penghasilan tambahan</p>
               </div>
-              
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-700">Earning per Trip</span>
-                  <span className="font-semibold text-green-600">Rp 15.000 - 50.000</span>
+                  <span className="text-gray-700">Fee Platform</span>
+                  <span className="font-semibold text-green-600">5% saja</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-700">Bonus Cuaca</span>
-                  <span className="font-semibold text-green-600">+ 25% - 50%</span>
+                  <span className="text-gray-700">Bonus Mingguan</span>
+                  <span className="font-semibold text-green-600">Up to Rp 500.000</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-700">Target Harian</span>
-                  <span className="font-semibold text-green-600">Rp 200.000 - 500.000</span>
+                  <span className="text-gray-700">Insentif Order</span>
+                  <span className="font-semibold text-green-600">Setiap 10 order</span>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-700">Potensi Bulanan</span>
-                  <span className="font-bold text-green-600 text-lg">Rp 6 - 15 Juta</span>
+                  <span className="text-gray-700">Pendapatan</span>
+                  <span className="font-bold text-green-600 text-lg">90%+ dari order</span>
                 </div>
               </div>
-              
               <div className="text-center">
                 <button 
                   onClick={handleRegisterDriver}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors shadow-lg transition-transform hover:scale-105"
                 >
                   Daftar Driver
                 </button>
               </div>
-              
               <p className="text-xs text-gray-500 mt-4 text-center">
-                Sistem pembayaran otomatis & transparansi penuh
+                Driver mendapat 90%+ dari harga order
               </p>
             </div>
           </div>
