@@ -1,12 +1,35 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const allowedOrigins = Deno.env.get('ALLOWED_ORIGINS')?.split(',') ?? []
+const rateLimit = new Map<string, { count: number; start: number }>()
+const WINDOW_MS = 60_000
+const MAX_REQ = 5
+
+function checkRateLimit(key: string) {
+  const now = Date.now()
+  const entry = rateLimit.get(key)
+  if (!entry || now - entry.start > WINDOW_MS) {
+    rateLimit.set(key, { count: 1, start: now })
+    return false
+  }
+  if (entry.count >= MAX_REQ) return true
+  entry.count += 1
+  return false
 }
 
 serve(async (req) => {
+  const origin = req.headers.get('Origin') || ''
+  if (origin && !allowedOrigins.includes(origin)) {
+    return new Response('Forbidden', { status: 403 })
+  }
+
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  }
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -15,23 +38,38 @@ serve(async (req) => {
   try {
     const { model, messages, temperature = 0.7, max_tokens = 1000, stream = false } = await req.json()
 
-    if (!model || !messages) {
-      throw new Error('Model and messages are required')
+    if (typeof model !== 'string' || !Array.isArray(messages)) {
+      throw new Error('Invalid request payload')
+    }
+    if (messages.length > 20) {
+      throw new Error('Too many messages')
     }
 
     // Initialize Supabase client
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-    )
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Missing Supabase credentials')
+    }
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey)
 
     // Get user from JWT token
-    const authHeader = req.headers.get('Authorization')!
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      throw new Error('Unauthorized')
+    }
     const token = authHeader.replace('Bearer ', '')
     const { data: { user } } = await supabaseClient.auth.getUser(token)
 
     if (!user) {
       throw new Error('Unauthorized')
+    }
+
+    if (checkRateLimit(user.id)) {
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded' }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
     }
 
     let response
